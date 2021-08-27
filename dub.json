@@ -1,0 +1,13 @@
+{
+	"authors": [
+		"rjkilpatrick"
+	],
+	"copyright": "Copyright © 2021, rjkilpatrick",
+	"dependencies": {
+		"mir-algorithm": "~>3.10.80"
+	},
+	"description": "A high-level linear algebra package in D. Based on NumPy.",
+	"license": "MIT",
+	"name": "numd",
+	"dflags-ldc": ["-mcpu=native"]
+}
