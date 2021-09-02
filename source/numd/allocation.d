@@ -1,4 +1,4 @@
-module allocation;
+module numd.allocation;
 
 private {
 	import std.stdio;
@@ -28,7 +28,8 @@ enum isNumeric(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T) || isComp
 	Slice!(double*, 2) matrix = ones!double(4, 2);
 	---
 +/
-Slice!(T*, N) eye(T = defaultType, size_t N)(size_t[N] lengths...) pure nothrow if (isNumeric!T && N >= 2) {
+Slice!(T*, N) eye(T = defaultType, size_t N)(size_t[N] lengths...) pure nothrow 
+		if (isNumeric!T && N >= 2) {
 	auto matrix = slice(lengths, cast(T) 0);
 	matrix.diagonal[] = 1;
 	return matrix;
@@ -75,7 +76,7 @@ auto ones(T = defaultType, size_t N)(in size_t[N] sizes...) pure nothrow {
 }
 
 ///
-pure nothrow @safe unittest {
+pure @safe unittest {
 	assert(ones!int(2) == [1, 1].fuse);
 	assert(ones!int(2, 2) == [[1, 1], [1, 1]].fuse);
 }
