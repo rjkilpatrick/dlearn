@@ -31,11 +31,11 @@ At present, this is the only way of obtaining NumD before the name is finalized.
 
 ```d
 import std : writeln;
-import numd;
+import numd.allocation : ones;
+import numd.math : sinh;
 
 auto x = ones!double(2, 2);
 x.sinh.writeln;
-x.fft.writeln;
 ```
 
 For more examples, please refer to the [Documentation](https://rjkilpatrick.github.io/NumD/).
