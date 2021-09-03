@@ -16,15 +16,17 @@ private {
 /++
     Dot product of 2 slices of vectors
 +/
-@fastmath CommonType!(T, U) dot(T, U)(const Slice!(T*, 1U) a, const Slice!(U*, 1U) b) pure nothrow @nogc @safe {
+@fastmath CommonType!(T, U) dot(T, U, size_t N, size_t M)(const Slice!(T*, N) a, const Slice!(U*, M) b) pure @safe
+		if (N >= 1 && N == M) {
 	import mir.math.sum;
 
-	assert(a.length == b.length);
+	assert(a.shape == b.shape);
 	return (a[] * b[]).sum;
 }
 
-pure nothrow @safe unittest {
+pure @safe unittest {
 	assert(dot([1, 1, 1].fuse, [1, 1, 1].fuse) == 3);
+	assert(dot([[1, 1, 1]].fuse, [[1, 1, 1]].fuse) == 3);
 }
 
 /// Attempts to multiply matrices
