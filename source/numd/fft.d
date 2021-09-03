@@ -1,3 +1,14 @@
+// Written in the D programming language.
+
+/++
+Fourier Transform methods and helper functions
+
+Copyright:	Copyright (c) 2021 John Kilpatrick
+
+License:	$(HTTP opensource.org/licenses/MIT MIT)
+
+Authors:	$(HTTP rjkilpatrick.github.io John Kilpatrick)
++/
 module numd.fft;
 
 import mir.ndslice;

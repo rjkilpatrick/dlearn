@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>http://127.0.0.1/index.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/eye.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/eye.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/full.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/identity.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/ones.html</loc></url>
+<url><loc>http://127.0.0.1/numd/allocation/zeros.html</loc></url>
+<url><loc>http://127.0.0.1/numd/fft.html</loc></url>
+<url><loc>http://127.0.0.1/numd/fft/fft.html</loc></url>
+<url><loc>http://127.0.0.1/numd/fft/fftshift.html</loc></url>
+<url><loc>http://127.0.0.1/numd/fft/ifftshift.html</loc></url>
+<url><loc>http://127.0.0.1/numd/fft/roll.html</loc></url>
+<url><loc>http://127.0.0.1/numd/linalg.html</loc></url>
+<url><loc>http://127.0.0.1/numd/linalg/dot.html</loc></url>
+<url><loc>http://127.0.0.1/numd/linalg/matrixMultiply.html</loc></url>
+<url><loc>http://127.0.0.1/numd/linalg/trace.html</loc></url>
+<url><loc>http://127.0.0.1/numd/math.html</loc></url>
+<url><loc>http://127.0.0.1/numd/math/deg2rad.html</loc></url>
+<url><loc>http://127.0.0.1/numd/math/rad2deg.html</loc></url>
+</urlset>

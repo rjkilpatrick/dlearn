@@ -1,3 +1,14 @@
+// Written in the D programming language.
+
+/++
+High-level allocation routines for Slices
+
+Copyright:	Copyright (c) 2021 John Kilpatrick
+
+License:	[MIT](opensource.org/licenses/MIT)
+
+Authors:	$(HTTP John Kilpatrick rjkilpatrick.github.io)
++/
 module numd.allocation;
 
 private {
@@ -28,15 +39,15 @@ enum isNumeric(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T) || isComp
 	Slice!(double*, 2) matrix = ones!double(4, 2);
 	---
 +/
-Slice!(T*, N) eye(T = defaultType, size_t N)(size_t[N] lengths...) pure nothrow 
-		if (isNumeric!T && N >= 2) {
+Slice!(T*, N) eye(T = defaultType, size_t N)(size_t[N] lengths...) pure @safe
+		if ((isNumeric!T && N >= 2) && lengths.length) {
 	auto matrix = slice(lengths, cast(T) 0);
 	matrix.diagonal[] = 1;
 	return matrix;
 }
 
 /// ditto
-Slice!(T*, 2u) eye(T = defaultType)(in size_t n) pure nothrow if (isNumeric!T) {
+Slice!(T*, 2u) eye(T = defaultType)(in size_t n) pure @safe if (isNumeric!T) {
 	return eye!T(n, n);
 }
 
@@ -71,7 +82,8 @@ pure @safe unittest {
 	Throws: throws nothing.
 	Returns: slice filled with ones.
 */
-auto ones(T = defaultType, size_t N)(in size_t[N] sizes...) pure nothrow {
+auto ones(T = defaultType, size_t N)(in size_t[N] sizes...) pure @safe
+		if (sizes.length) {
 	return slice!T(sizes, 1);
 }
 
@@ -96,7 +108,8 @@ pure @safe unittest {
 	Throws: throws nothing.
 	Returns: A slice with all zero elements
 */
-auto zeros(T = defaultType, size_t N)(size_t[N] sizes...) pure nothrow {
+auto zeros(T = defaultType, size_t N)(size_t[N] sizes...) pure @safe
+		if (sizes.length) {
 	return slice!T(sizes, 0);
 }
 
@@ -114,8 +127,8 @@ pure @safe unittest {
 
 	Example:
 	---
-	Slice!(int*, 1) vector = full([4], 1);
-	auto matrix = full!double([4, 2], 1);
+	Slice!(int*, 1) vector = full([4], 1); // [1, 1, 1, 1]
+	auto matrix = full!double([4, 2], 1); // TODO
 	---
 	Params:
 	sizes = dimensions of new array, e.g. `[1]`, or `[1, 2]`
@@ -125,7 +138,7 @@ pure @safe unittest {
 	Throws: throws nothing.
 	Returns: A slice with all zero elements
 */
-auto full(T = defaultType, size_t N)(size_t[N] sizes, T fillValue) pure nothrow {
+auto full(T = defaultType, size_t N)(size_t[N] sizes, T fillValue) pure @safe {
 	return slice!T(sizes, fillValue);
 }
 

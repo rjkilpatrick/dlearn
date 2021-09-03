@@ -1,3 +1,14 @@
+// Written in the D programming language.
+
+/++
+Mathematical functions acting on slices
+
+Copyright:	Copyright (c) 2021 John Kilpatrick
+
+License:	$(HTTP opensource.org/licenses/MIT, MIT)
+
+Authors:	$(HTTP rjkilpatrick.github.io/, John Kilpatrick)
++/
 module numd.math;
 
 private {

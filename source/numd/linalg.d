@@ -1,3 +1,14 @@
+// Written in the D programming language.
+
+/++
+High-level linear algebra manipulation methods
+
+Copyright:	Copyright (c) 2021 John Kilpatrick
+
+License:	$(HTTP opensource.org/licenses/MIT, MIT)
+
+Authors:	$(HTTP rjkilpatrick.github.io/, John Kilpatrick)
++/
 module numd.linalg;
 
 private {
