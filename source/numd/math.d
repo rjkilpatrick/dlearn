@@ -10,19 +10,20 @@ private {
     import numd.allocation : isNumeric, isFloatingPoint, isInteger;
 }
 
+// Unary functions
+
 // Trigonometric & Hyperbolic functions
 static foreach (func; [
         "acos", "acosh", "asin", "asinh", "atan", "atanh", "cos", "cosh",
         "sin", "sinh", "tan", "tanh"
     ]) { // atan2 NYI for  Complex!T
     mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @trusted if (isNumeric!T) {
-        import std.math.trigonometry : "
+            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isNumeric!T) {
+        import std.math.trigonometry : " ~ func ~ ";
+        import std.complex : "
             ~ func ~ ";
-        import std.complex : " ~ func ~ ";
 
-        return x[].map!"
-            ~ func ~ ".slice;
+        return x[].map!" ~ func ~ ".slice;
     }");
 }
 
@@ -54,16 +55,42 @@ pure @safe unittest {
     x.atanh;
 }
 
-// Exponentials, Logs, & Powers
-static foreach (func; ["exp", "fabs", "log", "log10", "pow"]) { // exp2, log2 NYI for Complex!T
-    mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @trusted if (isNumeric!T) {
-        import std.math.exponential : "
-            ~ func ~ ";
-        import std.complex : " ~ func ~ ";
+// // Exponentials, Logs, & Powers
+// static foreach (func; ["exp", "fabs", "log", "log10"]) { // exp2, log2 NYI for Complex!T
+//     mixin("static @fastmath Slice!(T*, N) " ~ func
+//             ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isNumeric!T) {
+//         import std.math.exponential : "
+//             ~ func ~ ";
+//         import std.complex : " ~ func ~ ";
 
-        return x[].map!"
-            ~ func ~ ".slice;
+//         return x[].map!"
+//             ~ func ~ ".slice;
+//     }");
+// }
+
+// //
+// pure @safe unittest {
+//     import mir.ndslice.topology : as, iota;
+
+//     const x = iota(10, 1).as!double.slice;
+
+//     // Exponentials
+//     x.exp;
+//     x.log;
+//     x.log10;
+
+//     // Powers
+//     x.fabs;
+//     // x.pow(2);
+// }
+
+// Rounding
+static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. round towards zero
+    mixin("static @fastmath Slice!(T*, N) " ~ func
+            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isFloatingPoint!T) {
+        import mir.math.common : " ~ func ~ ";
+
+        return x[].map!" ~ func ~ ".slice;
     }");
 }
 
@@ -72,30 +99,39 @@ pure @safe unittest {
     import mir.ndslice.topology : iota;
     import mir.ndslice : fuse;
 
-    const x = 10.iota!double(1).fuse;
+    const x = [1.1, 1.9, 2.0].fuse;
 
-    // Exponentials
-    x.exp;
-    x.log;
-    x.log10;
-
-    // Powers
-    x.fabs;
-    x.pow(2);
+    x.ceil;
+    x.floor;
+    x.round;
+    x.trunc;
 }
 
 // Equality and that
 public import mir.math.common : approxEqual;
 
 // Complex only
-static foreach (func; ["abs", "arg", "expi", "fromPolar", "proj", "sqAbs"]) { // N.B. sqAbs is implements for isFloatingPoint!T
+static foreach (func; ["abs", "arg", "proj", "sqAbs"]) { // N.B. sqAbs is implements for isFloatingPoint!T
     mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @trusted if (isComplex!T) {
+            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isComplex!T) {
         import std.complex : " ~ func ~ ";
 
         return x[].map!" ~ func ~ ".slice;
     }");
 }
+
+// //
+// pure @safe unittest {
+//     import mir.ndslice : fuse;
+
+//     const x = [1.1, 1.9, 2.0].fuse;
+
+//     x.abs;
+//     x.arg;
+//     x.floor;
+//     x.round;
+//     x.trunc;
+// }
 
 pure @safe unittest {
     import mir.complex : Complex;
@@ -124,26 +160,29 @@ pure @safe unittest {
 // FloatingPoint only
 static foreach (func; ["deg2rad", "rad2deg"]) {
     mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @trusted if (isFloatingPoint!T) {
+            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isFloatingPoint!T) {
         return x[].map!" ~ func ~ ".slice;
     }");
 }
 
-pure @safe unittest {
-    import std.math : PI;
+// /++
+// +/
+// static @fastmath bool approxEqual(T, size_t N)(in Slice!(T*, N) lhs, in Slice!(U*, N) rhs) pure nothrow @safe {
+//     import mir.math : approxEqual(lhs, rhs, maxRelDiff, maxAbsDiff)
+//     return lhs[].map!();
+// }
 
-    assert(approxEqual(deg2rad([0., 90.0, -270.0].fuse), [
-                0., 0.5 * PI, -1.5 * PI
-            ].fuse));
-}
+// pure @safe unittest {
+//     import std.math : PI;
 
-pure @safe unittest {
-    import std.math : PI;
+//     assert(deg2rad([0., 90.0, -270.0].fuse).approxEqual([0., 0.5 * PI, -1.5 * PI].fuse));
+// }
 
-    assert(approxEqual(rad2deg([0., 0.5 * PI, -1.5 * PI].fuse), [
-                0., 90.0, -270.0
-            ].fuse));
-}
+// pure @safe unittest {
+//     import std.math : PI;
+
+//     assert(rad2deg([0., 0.5 * PI, -1.5 * PI].fuse).approxEqual([0., 90.0, -270.0].fuse));
+// }
 
 // TODO:
 // -[ ] sum
@@ -154,8 +193,14 @@ pure @safe unittest {
 // -[ ] median
 // -[ ] std
 
+public import mir.algorithm.iteration : all, any;
+
 // From mir.algorithm.iteration:
 // -[ ] all
 // -[ ] any
 // -[ ] Slice == Slice
 // -[ ] Slice approxEquals Slice
+
+// TODO: Binary Operations:
+// static foreach (func; ["expi", "fromPolar"]) {
+// }
