@@ -3,11 +3,11 @@
 /++
 Fourier Transform methods and helper functions
 
-Copyright:	Copyright (c) 2021 John Kilpatrick
+Copyright: Copyright (c) 2021 John Kilpatrick
 
-License:	$(HTTP opensource.org/licenses/MIT MIT)
+License: MIT
 
-Authors:	$(HTTP rjkilpatrick.github.io John Kilpatrick)
+Authors: John Kilpatrick
 +/
 module numd.fft;
 

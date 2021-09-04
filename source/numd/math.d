@@ -5,7 +5,7 @@ Mathematical functions acting on slices
 
 Copyright: Copyright (c) 2021 John Kilpatrick
 
-License: [MIT](https://opensource.org/licenses/MIT)
+License: MIT
 
 Authors: John Kilpatrick
 +/
@@ -98,7 +98,7 @@ pure @safe unittest {
 // Rounding
 static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. round towards zero
     mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isFloatingPoint!T) {
+            ~ "(T, size_t N)(in Slice!(T*, N) x) /* pure nothrow */ @safe if (isFloatingPoint!T) {
         import mir.math.common : " ~ func ~ ";
 
         return x[].map!" ~ func ~ ".slice;
