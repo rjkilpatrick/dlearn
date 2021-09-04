@@ -31,11 +31,13 @@ At present, this is the only way of obtaining NumD before the name is finalized.
 
 ```d
 import std : writeln;
-import numd.allocation : ones;
+import numd.allocation : ones, eye;
 import numd.math : sinh;
+import numd.linalg : matrixMultiply;
 
 auto x = ones!double(2, 2);
-x.sinh.writeln;
+auto y = x.matrixMultiply(eye!double(2));
+y.sinh.writeln;
 ```
 
 For more examples, please refer to the [Documentation](https://rjkilpatrick.github.io/NumD/).
