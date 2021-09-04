@@ -9,9 +9,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  test:
-    name: dlang-unit-test
+  build-docs:
+    name: build docs
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -38,3 +37,7 @@ jobs:
           # Optional branch name where commit should be pushed to.
           # Defaults to the current branch.
           branch: gh-pages
+
+          # Since we are adding the docs folder to .gitignore, we need to force add
+          # See https://git-scm.com/docs/git-add#_options
+          add_options: "-f"
