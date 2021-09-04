@@ -3,11 +3,11 @@
 /++
 High-level allocation routines for Slices
 
-Copyright:	Copyright (c) 2021 John Kilpatrick
+Copyright: Copyright (c) 2021 John Kilpatrick
 
-License:	[MIT](opensource.org/licenses/MIT)
+License: MIT
 
-Authors:	$(HTTP John Kilpatrick rjkilpatrick.github.io)
+Authors: John Kilpatrick
 +/
 module numd.allocation;
 
@@ -27,6 +27,8 @@ enum isInteger(T) = is(Unqual!T == short) || is(Unqual!T == ushort)
 	|| is(Unqual!T == int) || is(Unqual!T == uint) || is(Unqual!T == long) || is(Unqual!T == ulong);
 
 enum isFloatingPoint(T) = is(Unqual!T == float) || is(Unqual!T == double) || is(Unqual!T == real); // || is(Unqual!T == cent) || is(Unqual!T == ucent);
+
+enum isContinuous(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T);
 
 enum isNumeric(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T) || isComplex!(Unqual!T);
 
@@ -82,15 +84,20 @@ pure @safe unittest {
 	Throws: throws nothing.
 	Returns: slice filled with ones.
 */
-auto ones(T = defaultType, size_t N)(in size_t[N] sizes...) pure @safe
+auto ones(T = defaultType, size_t N)(in size_t[N] sizes...) @safe pure nothrow 
 		if (sizes.length) {
 	return slice!T(sizes, 1);
 }
 
 ///
-pure @safe unittest {
+@safe pure unittest {
 	assert(ones!int(2) == [1, 1].fuse);
 	assert(ones!int(2, 2) == [[1, 1], [1, 1]].fuse);
+}
+
+/// ditto
+auto onesLike(T = defaultType, size_t N)(in Slice!(T*, N) x) @safe pure nothrow {
+	return ones(x.shape);
 }
 
 /**
@@ -118,6 +125,11 @@ pure @safe unittest {
 	assert(zeros!int(2) == [0, 0].fuse);
 	assert(zeros!int(2, 2) == [[0, 0], [0, 0]].fuse);
 	assert(zeros!int([2, 2]) == [[0, 0], [0, 0]].fuse);
+}
+
+/// ditto
+auto zerosLike(T = defaultType, size_t N)(in Slice!(T*, N) x) @safe pure nothrow {
+	return zeros(x.shape);
 }
 
 /**
@@ -152,4 +164,9 @@ pure @safe unittest {
 	assert(full([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
 	assert(full!double([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
 	assert(full!float([2, 2], 1.1) == [[1.1f, 1.1f], [1.1f, 1.1f]].fuse);
+}
+
+/// ditto
+auto fullLike(T = defaultType, size_t N)(in Slice!(T*, N) x, in T fillValue) @safe pure nothrow {
+	return full(x.shape, fillValue);
 }
