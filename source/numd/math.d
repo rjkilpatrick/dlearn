@@ -3,11 +3,11 @@
 /++
 Mathematical functions acting on slices
 
-Copyright:	Copyright (c) 2021 John Kilpatrick
+Copyright: Copyright (c) 2021 John Kilpatrick
 
-License:	$(HTTP opensource.org/licenses/MIT, MIT)
+License: [MIT](https://opensource.org/licenses/MIT)
 
-Authors:	$(HTTP rjkilpatrick.github.io/, John Kilpatrick)
+Authors: John Kilpatrick
 +/
 module numd.math;
 
@@ -27,7 +27,7 @@ private {
 static foreach (func; [
         "acos", "acosh", "asin", "asinh", "atan", "atanh", "cos", "cosh",
         "sin", "sinh", "tan", "tanh"
-    ]) { // atan2 NYI for  Complex!T
+    ]) { // TODO: atan2 element-wise NYI for isFloatingPoint!T, atan2 doesn't make sense for complex types
     mixin("static @fastmath Slice!(T*, N) " ~ func
             ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isNumeric!T) {
         import std.math.trigonometry : " ~ func ~ ";
@@ -40,10 +40,10 @@ static foreach (func; [
 
 //
 pure @safe unittest {
-    import mir.ndslice.topology : iota;
-    import mir.ndslice : fuse;
+	import mir.ndslice.topology : as, iota;
+    import mir.ndslice : slice;
 
-    const x = 10.iota!double.fuse;
+    const x = 10.iota.as!double.slice;
 
     // Trig
     x.sin;
@@ -107,7 +107,6 @@ static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. 
 
 //
 pure @safe unittest {
-    import mir.ndslice.topology : iota;
     import mir.ndslice : fuse;
 
     const x = [1.1, 1.9, 2.0].fuse;
