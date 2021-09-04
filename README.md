@@ -14,7 +14,7 @@ If you are using it in your own projects, please pin to an [exact version](https
 
 ## Getting Started
 
-### Prerequisits
+### Prerequisites
 
 1. [dub](https://dub.pm/)
 1. [dmd / ldc](https://dlang.org/download.html)
