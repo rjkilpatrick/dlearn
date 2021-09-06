@@ -106,7 +106,7 @@ static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. 
 }
 
 //
-pure @safe unittest {
+@safe unittest { // TODO: Add pure, see https://github.com/libmir/mir-core/issues/47
     import mir.ndslice : fuse;
 
     const x = [1.1, 1.9, 2.0].fuse;
