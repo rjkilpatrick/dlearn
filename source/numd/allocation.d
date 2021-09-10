@@ -97,9 +97,18 @@ auto ones(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothro
 	assert(ones!int(2, 2) == [[1, 1], [1, 1]].fuse);
 }
 
-/// ditto
+/++
+	Ones like a given Slice
++/
 auto onesLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return ones(x.shape);
+	return ones!(T, N)(x.shape);
+}
+
+///
+@safe pure unittest {
+	assert(onesLike([0, 0].fuse) == [1, 1].fuse);
+	auto x = ones!int(2, 2);
+	assert(x == onesLike(x));
 }
 
 /**
@@ -113,7 +122,6 @@ auto onesLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothro
 	Params:
 	lengths = dimensions of new array, e.g. `(1)`, or `(1, 2)`
 
-	License: MIT - Copyright (c) 2021 John Kilpatrick
 	Throws: throws nothing.
 	Returns: A slice with all zero elements
 */
@@ -129,9 +137,11 @@ pure @safe unittest {
 	assert(zeros!int([2, 2]) == [[0, 0], [0, 0]].fuse);
 }
 
-/// ditto
+/++
+	Zeros like a given slice
++/
 auto zerosLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return zeros(x.shape);
+	return zeros!(T, N)(x.shape);
 }
 
 ///
@@ -140,8 +150,8 @@ pure @safe unittest {
 
 	assert(zerosLike([0, 0].fuse) == [0, 0].fuse);
 
-	// auto x = [[1, 2], [3, 4]].as!(double[]).sliced(2, 2);
-	// assert(zerosLike(x) == [[0., 0.], [0., 0.]].fuse);
+	auto x = [[1, 2], [3, 4]].fuse.as!double.slice;
+	assert(zerosLike(x) == [[0., 0.], [0., 0.]].fuse);
 }
 
 /**
@@ -158,7 +168,6 @@ pure @safe unittest {
 	lengths = dimensions of new array, e.g. `[1]`, or `[1, 2]`
 	fillValue = value for each element of array
 
-	License: MIT - Copyright (c) 2021 John Kilpatrick
 	Throws: throws nothing.
 	Returns: A slice with all zero elements
 */
@@ -181,7 +190,7 @@ pure @safe unittest {
 
 /// ditto
 auto fullLike(T = defaultType, ulong N)(const Slice!(T*, N) x, const T fillValue) @safe pure nothrow {
-	return full(x.shape, fillValue);
+	return full!(T, N)(x.shape, fillValue);
 }
 
 /**
@@ -195,7 +204,6 @@ auto fullLike(T = defaultType, ulong N)(const Slice!(T*, N) x, const T fillValue
 	Params:
 	lengths = dimensions of new array, e.g. `(1)`, or `(1, 2)`
 
-	License: MIT - Copyright (c) 2021 John Kilpatrick
 	Throws: throws nothing.
 	Returns: unfilled slice.
 */
@@ -213,9 +221,21 @@ auto empty(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothr
 	assert(x == [1, 1].fuse);
 }
 
-/// ditto
+/++
+	New empty like Slice
++/
 auto emptyLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return empty(x.shape);
+	return empty!(T, N)(x.shape);
+}
+
+///
+@safe pure unittest {
+	Slice!(double*, 1) x = [0., 0.].fuse;
+
+	auto y = emptyLike(x);
+	y[] = 1;
+
+	assert(y == [1, 1].fuse);
 }
 
 
@@ -290,4 +310,5 @@ pure @safe unittest {
 	// [Complex!double(0., 0.), Complex!double(0., 1.)]
 	// ].fuse);
 	assert(diag([0, 0].fuse) == [[0, 0], [0, 0]].fuse);
+	assert(diag([1.0, 1.0].fuse) == [[1.0, 0], [0, 1.0]].fuse);
 }
