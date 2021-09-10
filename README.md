@@ -7,6 +7,17 @@
 
 High-level Linear algebra and scientific computing package in D.
 
+## Table of contents
+
+- [State of the Project](#state-of-the-project)
+- [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Building from source](#building-from-source)
+- [Usage](#usage)
+- [Building the Documentation](#building-the-documentation)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## State of the Project
 
 The **API** is in very early stages and is subject to change **without notice**.
