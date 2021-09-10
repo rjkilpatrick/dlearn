@@ -195,7 +195,8 @@ static foreach (func; ["deg2rad", "rad2deg"]) {
 // }
 
 /// Returns maximum element of a given slice, if any element is +/- NaN, it is ignored.
-T max(T, size_t N)(Slice!(T*, N) x) if (isFloatingPoint!T) {
+T max(T, size_t N)(Slice!(T*, N) x) @fastmath nothrow @safe pure 
+        if (isFloatingPoint!T) {
     import mir.algorithm.iteration : reduce;
     import std.math.operations : fmax;
 
@@ -208,8 +209,25 @@ pure @safe unittest {
     assert(max([[-1.0, 3.5], [10., 20.]].fuse) == 20.0);
 }
 
+/// Maximum element-wise
+Slice!(T*, N) maximum(T, size_t N)(Slice!(T*, N) x, Slice!(T*, N) y) @fastmath nothrow @safe pure
+        if (isFloatingPoint!T) {
+    import std.math.operations : fmax;
+    import mir.ndslice.topology : map;
+
+    return zip(x, y).map!((a, b) => fmax(a, b)).slice;
+}
+
+///
+pure @safe unittest {
+    assert(maximum([-1.0, 3.5, 10.0].fuse, [0.0, 0.0, 0.0].fuse) == [
+            0.0, 3.5, 10.0
+            ].fuse);
+}
+
 /// Returns minimum element of a given slice, if any element is +/- NaN, it is ignored.
-T min(T, size_t N)(Slice!(T*, N) x) if (isFloatingPoint!T) {
+T min(T, size_t N)(Slice!(T*, N) x) @fastmath nothrow @safe pure 
+        if (isFloatingPoint!T) {
     import mir.algorithm.iteration : reduce;
     import std.math.operations : fmin;
 
@@ -217,9 +235,25 @@ T min(T, size_t N)(Slice!(T*, N) x) if (isFloatingPoint!T) {
 }
 
 ///
-pure @safe unittest {
+@safe pure unittest {
     assert(min([-1.0, 3.5, 10.].fuse) == -1.0);
     assert(min([[-1.0, 3.5], [10., 20.]].fuse) == -1.0);
+}
+
+/// Minimum element-wise
+Slice!(T*, N) minimum(T, size_t N)(Slice!(T*, N) x, Slice!(T*, N) y) @fastmath nothrow @safe pure
+        if (isFloatingPoint!T) {
+    import std.math.operations : fmin;
+    import mir.ndslice.topology : map;
+
+    return zip(x, y).map!((a, b) => fmin(a, b)).slice;
+}
+
+///
+pure @safe unittest {
+    assert(minimum([-1.0, 3.5, 10.0].fuse, [0.0, 0.0, 0.0].fuse) == [
+            -1.0, 0.0, 0.0
+            ].fuse);
 }
 
 public import mir.algorithm.iteration : all, any;
@@ -237,7 +271,8 @@ public import mir.algorithm.iteration : all, any;
 /++
     Clamp a number between two values
 +/
-T clamp(T)(T x, T min = -T.max, T max = T.max) pure @safe if (isReal!T)
+T clamp(T)(T x, T min = -T.max, T max = T.max) @fastmath nothrow @safe pure @nogc
+        if (isReal!T)
 in {
     assert(max >= min, "Max cannot be less than min");
 }
@@ -246,6 +281,7 @@ do {
     return t > max ? max : t;
 }
 
+///
 pure @safe unittest {
     assert(clamp(3.5) == 3.5);
     assert(clamp(3.5, 3.) == 3.5);
@@ -255,4 +291,17 @@ pure @safe unittest {
 
     // TODO: Waiting on <https://github.com/dlang/projects/issues/76>
     // assert(clamp(3.0, max: 2.0) == 2.0);
+}
+
+/// Clamp element-wise
+Slice!(T*, N) clamp(T, size_t N)(Slice!(T*, N) x, T min = -T.max, T max = T.max) @fastmath nothrow @safe pure
+        if (isFloatingPoint!T) {
+    import mir.ndslice.topology : map;
+
+    return x.dup.map!((ref a) => clamp(a, min, max)).slice;
+}
+
+///
+pure @safe unittest {
+    assert(clamp([-1.0, 3.5, 10.].fuse, 0, 5) == [-0., 3.5, 5.0].fuse);
 }
