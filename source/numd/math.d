@@ -15,10 +15,10 @@ private {
     import mir.ndslice;
     import mir.ndslice.topology : map;
 
-    import mir.internal.utility : isComplex;
     import mir.math.common : approxEqual, fastmath;
 
-    import numd.allocation : isNumeric, isFloatingPoint, isInteger;
+    import numd.allocation;
+    import numd.utility;
 }
 
 // Unary functions

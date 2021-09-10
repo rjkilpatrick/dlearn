@@ -15,7 +15,7 @@ import mir.ndslice;
 
 private {
     import mir.math.common : fastmath;
-    import numd.allocation : isNumeric, isFloatingPoint, isInteger;
+    import numd.utility;
 }
 
 /**

@@ -16,12 +16,12 @@ private {
 	import mir.ndslice;
 	import mir.complex;
 	import mir.ndslice.topology : map;
-	import mir.internal.utility : isFloatingPoint, isComplex;
 	import mir.math.common : fastmath;
 	import std.traits : CommonType;
 
 	import numd.allocation;
 	import numd.math;
+	import numd.utility;
 }
 
 /++
