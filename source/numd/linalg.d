@@ -27,9 +27,13 @@ private {
 /++
     Dot product of 2 slices of vectors
 +/
-@fastmath CommonType!(T, U) dot(T, U, size_t N, size_t M)(const Slice!(T*, N) a, const Slice!(U*, M) b) pure @safe
-		if (N >= 1 && N == M) {
-	import mir.math.sum;
+@fastmath CommonType!(T, U) dot(T, U, size_t N, size_t M)(const Slice!(T*,
+		N) a, const Slice!(U*, M) b) pure @safe if (N >= 1 && N == M)
+in {
+	assert(a.shape == b.shape);
+}
+do {
+	import mir.math.sum : sum;
 
 	assert(a.shape == b.shape);
 	return (a[] * b[]).sum;
@@ -41,9 +45,12 @@ pure @safe unittest {
 }
 
 /// Attempts to multiply matrices
-@fastmath Slice!(CommonType!(T, U)*, 2u) matrixMultiply(T, U)(const Slice!(T*,
-		2u) a, const Slice!(U*, 2u) b) pure nothrow @safe {
+Slice!(CommonType!(T, U)*, 2u) matrixMultiply(T, U)(
+		const Slice!(T*, 2u) a, const Slice!(U*, 2u) b) pure nothrow @safe @fastmath
+in {
 	assert(a.length!1 == b.length!0);
+}
+do {
 	import std.traits : CommonType;
 
 	const m = a.length!0;
@@ -88,6 +95,8 @@ pure @safe unittest {
 /// Takes the trace of a 2D mir Slice
 static @fastmath T trace(T)(Slice!(T*, 2u) x) pure nothrow @nogc @safe
 		if (isNumeric!T) {
+	import mir.math.sum : sum;
+
 	return x.diagonal[].sum;
 }
 
