@@ -214,3 +214,26 @@ public import mir.algorithm.iteration : all, any;
 // TODO: Binary Operations:
 // static foreach (func; ["expi", "fromPolar"]) {
 // }
+
+/++
+    Clamp a number between two values
++/
+T clamp(T)(T x, T min = -T.max, T max = T.max) pure @safe if (isReal!T)
+in {
+    assert(max >= min, "Max cannot be less than min");
+}
+do {
+    auto t = x < min ? min : x;
+    return t > max ? max : t;
+}
+
+pure @safe unittest {
+    assert(clamp(3.5) == 3.5);
+    assert(clamp(3.5, 3.) == 3.5);
+    assert(clamp(3.5, 4.) == 4.0);
+    assert(clamp(3, -2, 0) == 0);
+    assert(clamp(3.0, -double.max, 0.) == 0.0);
+
+    // TODO: Waiting on <https://github.com/dlang/projects/issues/76>
+    // assert(clamp(3.0, max: 2.0) == 2.0);
+}
