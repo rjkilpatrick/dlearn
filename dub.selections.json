@@ -2,6 +2,8 @@
 	"fileVersion": 1,
 	"versions": {
 		"mir-algorithm": "3.10.80",
-		"mir-core": "1.1.82"
+		"mir-core": "1.1.82",
+		"mir-linux-kernel": "1.2.0",
+		"mir-random": "2.2.19"
 	}
 }

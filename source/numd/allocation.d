@@ -16,9 +16,8 @@ private {
 	import mir.ndslice;
 	import mir.complex;
 	import mir.ndslice.topology : map;
-	import mir.internal.utility : isComplex;
 
-	alias defaultType = int;
+	alias defaultType = float;
 
 	import std.traits : Unqual;
 }
@@ -28,9 +27,11 @@ enum isInteger(T) = is(Unqual!T == short) || is(Unqual!T == ushort)
 
 enum isFloatingPoint(T) = is(Unqual!T == float) || is(Unqual!T == double) || is(Unqual!T == real); // || is(Unqual!T == cent) || is(Unqual!T == ucent);
 
-enum isContinuous(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T);
+enum isContinuous(T) = isComplex!(Unqual!T) || isFloatingPoint!(Unqual!T);
 
 enum isNumeric(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T) || isComplex!(Unqual!T);
+
+enum isReal(T) = isInteger!(Unqual!T) || isFloatingPoint!(Unqual!T);
 
 /++
 	Allocates 2D identity sliced array with ones on the major diagonal and zeros elsewhere
@@ -169,4 +170,64 @@ pure @safe unittest {
 /// ditto
 auto fullLike(T = defaultType, size_t N)(in Slice!(T*, N) x, in T fillValue) @safe pure nothrow {
 	return full(x.shape, fillValue);
+}
+
+/++
+	Uniform random number const range [0, 1] convinience wrapper
+
+	Params:
+		lengths = length of each dimension required
+
+	Returns:
+		Slice populated with random values
+
+	Example:
+    ---
+    auto x = rand!float(4);
+	auto y = rand!double([2, 2]);
+    ---
++/
+Slice!(T*, N) rand(T = defaultType, ulong N)(ulong[N] lengths...) @safe
+		if (isFloatingPoint!T) {
+	import mir.random.variable : uniformVar;
+	import mir.random.algorithm : randomSlice;
+
+	return uniformVar!T(0, 1).randomSlice(lengths);
+}
+
+/++
+	Normal distribution random number convinience wrapper
+
+	Mean is 0, standard deviation is 1.
+
+	Params:
+		lengths = length of each dimension required
+
+	Returns:
+		Slice populated with normally distributed random values
+
+	Example:
+    ---
+    auto x = randn!float(4);
+	auto y = randn!double([2, 2]);
+    ---
++/
+Slice!(T*, N) randn(T = defaultType, ulong N)(ulong[N] lengths...) @safe
+		if (isFloatingPoint!T) {
+	import mir.random.variable : normalVar;
+import mir.random.algorithm : randomSlice;
+
+	return normalVar!T(0, 1).randomSlice(lengths);
+}
+
+/++
+	Uniform random number convinience wrapper
++/
+Slice!(T*, N) rand(T, size_t N)(size_t[N] lengths...) @safe if (isFloatingPoint!T) {
+	return uniformVar!T(0, 1).randomSlice(lengths);
+}
+
+///
+Slice!(T*, N) randn(T, size_t N)(size_t[N] lengths...) @safe if (isFloatingPoint!T) {
+	return normalVar!T(0, 1).randomSlice(lengths);
 }
