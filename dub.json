@@ -5,6 +5,7 @@
 	"copyright": "Copyright © 2021, rjkilpatrick",
 	"dependencies": {
 		"mir-algorithm": "~>3.10.80",
+		"mir-blas": "~>1.1.13",
 		"mir-random": "~>2.2.19"
 	},
 	"description": "A high-level linear algebra package in D. Based on NumPy.",

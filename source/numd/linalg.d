@@ -17,80 +17,106 @@ private {
 	import mir.complex;
 	import mir.ndslice.topology : map;
 	import mir.internal.utility : isFloatingPoint, isComplex;
-	import mir.math.sum;
 	import mir.math.common : fastmath;
 	import std.traits : CommonType;
 
 	import numd.allocation;
+	import numd.math;
 }
 
 /++
-    Dot product of 2 slices of vectors
+    Dot product of 2 slices
 +/
-@fastmath CommonType!(T, U) dot(T, U, size_t N, size_t M)(const Slice!(T*,
-		N) a, const Slice!(U*, M) b) pure @safe if (N >= 1 && N == M)
+T dot(T, SliceKind kindX, U, SliceKind kindY, size_t N)(Slice!(T*, N,
+		kindX) x, Slice!(U*, N, kindY) y) pure nothrow @safe @fastmath
 in {
-	assert(a.shape == b.shape);
+	assert(x.strides == y.strides);
 }
 do {
-	import mir.math.sum : sum;
+	import mir.algorithm.iteration : reduce;
+	import mir.ndslice.topology : zip;
+	import mir.math.common : fastmath;
 
-	assert(a.shape == b.shape);
-	return (a[] * b[]).sum;
+	static @fastmath T fmuladd(T, Z)(const T a, Z z) {
+		return a + z.a * z.b;
+	}
+
+	auto z = zip!true(x, y);
+
+	return reduce!fmuladd(0, z);
 }
 
 pure @safe unittest {
 	assert(dot([1, 1, 1].fuse, [1, 1, 1].fuse) == 3);
-	assert(dot([[1, 1, 1]].fuse, [[1, 1, 1]].fuse) == 3);
+	assert(dot([[1, 1, 1], [1, 1, 1]].fuse, [[1, 1, 1], [1, 1, 1]].fuse) == 6);
 }
 
 /// Attempts to multiply matrices
-Slice!(CommonType!(T, U)*, 2u) matrixMultiply(T, U)(
-		const Slice!(T*, 2u) a, const Slice!(U*, 2u) b) pure nothrow @safe @fastmath
+Slice!(CommonType!(T, U)*, 2u) matrixMultiply(T, SliceKind kindX, U, SliceKind kindY)(
+		Slice!(T*, 2u, kindX) a, Slice!(U*, 2u, kindY) b) pure nothrow @safe @fastmath
 in {
 	assert(a.length!1 == b.length!0);
 }
 do {
 	import std.traits : CommonType;
+	import mir.blas : gemm;
 
 	const m = a.length!0;
-	const p = a.length!1;
 	const n = b.length!1;
 
-	auto c = zeros!(CommonType!(T, U))(m, n);
-
-	foreach (i; 0 .. m) {
-		foreach (j; 0 .. n) {
-			foreach (k; 0 .. p) {
-				c[i][j] += a[i][k] * b[k][j];
-			}
-			// c[i][j] = a[i, 0..$].dot(b[0..$, j]);
-		}
-	}
-
+	auto c = empty!(CommonType!(T, U))(m, n);
+	gemm(1, a, b, 0, c);
 	return c;
 }
 
+///
 pure @safe unittest {
 	assert(eye!double(2).matrixMultiply(eye!double(2)) == eye!double(2));
 	assert(ones!double(2, 2).matrixMultiply(eye!double(2)) == ones!double(2, 2));
 
-	// const a = [[1, 2, 3], [4, 5, 6]].fuse;
-	// const b = [[7, 8], [9, 10], [11, 12]].fuse;
-	// const a = iota!double([2, 3], 1).slice;
-	// const b = iota!double([3, 2], 7).slice;
+	auto a = [2, 3].iota(1).as!double.slice;
+	auto b = [3, 2].iota(7).as!double.slice;
 
-	// const result = [[56, 64], [139, 154]].fuse;
-	// assert(a.matrixMultiply(b) == result);
+	const result = [[58, 64], [139, 154]].fuse.as!double;
+	// assert(a.matrixMultiply(b).approxEqual(result));
+	assert(a.matrixMultiply(b) == result);
 }
 
-// // auto matrixMultiply(T)(const Slice!(T*, 2u) a, const Slice!(T*, 1u) b) pure nothrow {
-// // 	return matrixMultiply(a, b.unsqueeze(-1));
-// // }
+/// ditto
+Slice!(CommonType!(T, U)*, 1u) matrixMultiply(T, SliceKind kindX, U, SliceKind kindY)(
+		Slice!(T*, 2u, kindX) a, Slice!(U*, 1u, kindY) x) pure nothrow @safe @fastmath
+in {
+	assert(a.length!1 == x.length);
+}
+do {
+	import std.traits : CommonType;
+	import mir.blas : gemv;
 
-// // auto matrixMultiply(T)(const Slice!(T*, 1u) a, const Slice!(T*, 2u) b) pure nothrow {
-// // 	return matrixMultiply(a.unsqueeze(-2), b);
-// // }
+	const m = a.length!0;
+
+	auto c = empty!(CommonType!(T, U))(m);
+	gemv(1.0, a, x, 0.0, c);
+	return c;
+}
+
+///
+pure @safe unittest {
+	// assert(eye!double(2).matrixMultiply(ones!double(2)).approxEqual(ones!double(2)));
+	assert(eye!double(2).matrixMultiply(ones!double(2)) == ones!double(2));
+}
+
+/// ditto
+Slice!(CommonType!(T, U)*, 1u) matrixMultiply(T, U)(Slice!(T*, 1u) x, Slice!(U*, 2u) a) pure nothrow {
+	return a.transposed.matrixMultiply(x);
+}
+
+///
+pure @safe unittest {
+	// assert(ones!double(2).matrixMultiply(eye!double(2)).approxEqual(ones!double(2)));
+	assert(ones!double(2).matrixMultiply(eye!double(2)) == ones!double(2));
+	assert([2, 2].iota.as!double.slice.matrixMultiply([2, 2].iota(1)
+			.as!double.slice) == [[3.0, 4.0], [11.0, 16.0]]);
+}
 
 /// Takes the trace of a 2D mir Slice
 static @fastmath T trace(T)(Slice!(T*, 2u) x) pure nothrow @nogc @safe
