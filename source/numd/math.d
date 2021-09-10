@@ -194,14 +194,33 @@ static foreach (func; ["deg2rad", "rad2deg"]) {
 //     assert(rad2deg([0., 0.5 * PI, -1.5 * PI].fuse).approxEqual([0., 90.0, -270.0].fuse));
 // }
 
-// TODO:
-// -[ ] sum
-// -[ ] min
-// -[ ] max
-// -[ ] cumsum
-// -[ ] mean
-// -[ ] median
-// -[ ] std
+/// Returns maximum element of a given slice, if any element is +/- NaN, it is ignored.
+T max(T, size_t N)(Slice!(T*, N) x) if (isFloatingPoint!T) {
+    import mir.algorithm.iteration : reduce;
+    import std.math.operations : fmax;
+
+    return reduce!fmax(-T.max, x);
+}
+
+///
+pure @safe unittest {
+    assert(max([-1.0, 3.5, 10.].fuse) == 10.);
+    assert(max([[-1.0, 3.5], [10., 20.]].fuse) == 20.0);
+}
+
+/// Returns minimum element of a given slice, if any element is +/- NaN, it is ignored.
+T min(T, size_t N)(Slice!(T*, N) x) if (isFloatingPoint!T) {
+    import mir.algorithm.iteration : reduce;
+    import std.math.operations : fmin;
+
+    return reduce!fmin(T.max, x);
+}
+
+///
+pure @safe unittest {
+    assert(min([-1.0, 3.5, 10.].fuse) == -1.0);
+    assert(min([[-1.0, 3.5], [10., 20.]].fuse) == -1.0);
+}
 
 public import mir.algorithm.iteration : all, any;
 
