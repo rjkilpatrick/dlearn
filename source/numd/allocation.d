@@ -172,6 +172,40 @@ auto fullLike(T = defaultType, size_t N)(in Slice!(T*, N) x, in T fillValue) @sa
 	return full(x.shape, fillValue);
 }
 
+/**
+	Returns an unfilled slice of a given shape.
+
+	Example:
+	---
+	Slice!(int*, 1) vector = empty!int(4);
+	Slice!(double*, 2) matrix = empty!double(4, 2);
+	---
+	Params:
+	lengths = dimensions of new array, e.g. `(1)`, or `(1, 2)`
+
+	License: MIT - Copyright (c) 2021 John Kilpatrick
+	Throws: throws nothing.
+	Returns: unfilled slice.
+*/
+auto empty(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow 
+		if (lengths.length) {
+	import mir.ndslice.allocation : uninitSlice;
+	return uninitSlice!T(lengths);
+}
+
+///
+@safe pure unittest {
+	auto x = empty!int(2);
+	x[] = 1;
+
+	assert(x == [1, 1].fuse);
+}
+
+/// ditto
+auto emptyLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
+	return empty(x.shape);
+}
+
 /++
 	Uniform random number const range [0, 1] convinience wrapper
 
