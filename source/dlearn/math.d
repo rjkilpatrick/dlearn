@@ -297,3 +297,38 @@ Slice!(T*, N) clamp(T, size_t N)(Slice!(T*, N) x, T min = -T.max, T max = T.max)
 pure @safe unittest {
     assert(clamp([-1.0, 3.5, 10.].fuse, 0, 5) == [-0., 3.5, 5.0].fuse);
 }
+
+/++
+    Sum of all elements in x
+
+    TODO: Add axis
++/
+T sum(T, size_t N)(Slice!(T*, N) x) {
+    import mir.math.sum : sum;
+
+    return x.sum;
+}
+
+///
+pure @safe unittest {
+    assert(sum([0, 1, 2].fuse) == 3);
+    assert(sum(iota(3, 2).slice) == 15); // 0 + 1 + 2 + 3 + 4 + 5
+}
+
+/++
+    Mean of x
+
+    TODO: Add axis
++/
+T mean(T, size_t N)(Slice!(T*, N) x) {
+    import std.conv : to;
+    return x.sum / x.elementCount.to!T;
+}
+
+///
+pure @safe unittest {
+    import std.math : sqrt;
+
+    assert(mean([9, 10, 12, 13, 13, 13, 15, 15, 16, 16, 18, 22, 23, 24, 24, 25].as!double.fuse) == 16.75);
+    assert(mean([[0, 1], [-1, 4]].fuse) == 1);
+}
