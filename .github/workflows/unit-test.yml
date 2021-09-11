@@ -1,4 +1,4 @@
-name: Run all dub unit tests
+name: ${{ matrix.os }}, ${{ matrix.dcompiler }} dub unit tests
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     name: dlang-unit-test
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
         dcompiler: [dmd-latest, ldc-latest]
 
     # The type of runner that the job will run on
@@ -26,6 +26,22 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: Install BLAS
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install libopenblas-dev
+
+      # - name: Install BLAS macOS
+      #   if: matrix.os == 'macOS-latest'
+      #   run: |
+      #     brew install openblas
+      #     brew link openblas
+
+      # - name: Install BLAS Windows
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     brew install openblas
+      #     brew link openblas
 
       - name: Install D Compiler
         uses: dlang-community/setup-dlang@v1
