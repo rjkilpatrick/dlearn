@@ -1,4 +1,4 @@
-name: ${{ matrix.os }}, ${{ matrix.dcompiler }} dub unit tests
+name: dub unit tests
 
 on:
   push:
