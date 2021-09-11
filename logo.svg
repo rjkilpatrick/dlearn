@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="355.15329"
+   height="179.24805"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.1 (c4e8f9ed74, 2021-05-24)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs13" />
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:snap-global="true"
+     inkscape:zoom="1.7135554"
+     inkscape:cx="85.494754"
+     inkscape:cy="96.29102"
+     inkscape:window-width="1920"
+     inkscape:window-height="1023"
+     inkscape:window-x="0"
+     inkscape:window-y="29"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <text
+     font-style="normal"
+     font-weight="normal"
+     xml:space="preserve"
+     text-anchor="start"
+     font-family="'Open Sans'"
+     font-size="212.806px"
+     id="svg_1"
+     y="165.24927"
+     x="14.823332"
+     stroke-width="0"
+     stroke="#000000"
+     fill="#c40000"
+     style="fill:#bf0000;fill-opacity:1">D</text>
+  <text
+     font-style="normal"
+     font-weight="normal"
+     xml:space="preserve"
+     text-anchor="start"
+     font-family="'Open Sans'"
+     font-size="68.0981px"
+     id="svg_2"
+     y="165.24927"
+     x="171.31845"
+     stroke-width="0"
+     stroke="#000000"
+     fill="#000000">learn</text>
+  <rect
+     id="svg_7"
+     height="22.917618"
+     width="34.049026"
+     y="28.607533"
+     x="26.347206"
+     stroke-width="0"
+     stroke="#000000"
+     fill="#ffffff"
+     ry="0" />
+</svg>

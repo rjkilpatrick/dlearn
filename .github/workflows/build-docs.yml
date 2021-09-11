@@ -1,0 +1,43 @@
+name: build-docs
+
+on:
+  release:
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build-docs:
+    name: build docs
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install D Compiler
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ${{ matrix.dcompiler }}
+
+      - name: Run tests
+        run: dub build --build=ddox
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          # Optional, but recommended
+          # Defaults to "Apply automatic changes"
+          commit_message: Update documentation
+
+          # Optional branch name where commit should be pushed to.
+          # Defaults to the current branch.
+          branch: gh-pages
+
+          # Since we are adding the docs folder to .gitignore, we need to force add
+          # See https://git-scm.com/docs/git-add#_options
+          add_options: "-f"
