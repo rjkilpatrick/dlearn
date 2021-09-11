@@ -286,6 +286,7 @@ Slice!(T*, N) clamp(T, size_t N)(Slice!(T*, N) x, T min = -T.max, T max = T.max)
         if (isFloatingPoint!T) {
     import mir.ndslice.topology : map;
 
+    return x.map!(a => clamp(a, min, max)).slice;
 }
 
 ///
