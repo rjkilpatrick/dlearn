@@ -99,6 +99,7 @@ pure @safe unittest {
 // Rounding
 static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. round towards zero
     mixin("static @fastmath Slice!(T*, N) " ~ func
+            ~ "(T, size_t N)(in Slice!(T*, N) x) pure nothrow @safe if (isFloatingPoint!T) {
         import mir.math.common : " ~ func ~ ";
 
         return x[].map!" ~ func ~ ".slice;
@@ -111,6 +112,9 @@ static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. 
 
     const x = [1.1, 1.9, 2.0].fuse;
 
+    assert(x.ceil == [2.0, 2.0, 2.0].fuse);
+    assert(x.floor == [1.0, 1.0, 2.0].fuse);
+    assert(x.round == [1.0, 2.0, 2.0].fuse);
     x.trunc;
 }
 
