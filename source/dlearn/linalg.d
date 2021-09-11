@@ -9,7 +9,7 @@ License: MIT
 
 Authors: John Kilpatrick
 +/
-module numd.linalg;
+module dlearn.linalg;
 
 private {
 	import std.stdio;
@@ -19,9 +19,9 @@ private {
 	import mir.math.common : fastmath;
 	import std.traits : CommonType;
 
-	import numd.allocation;
-	import numd.math;
-	import numd.utility;
+	import dlearn.allocation;
+	import dlearn.math;
+	import dlearn.utility;
 }
 
 /++

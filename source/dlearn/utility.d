@@ -1,4 +1,4 @@
-module numd.utility;
+module dlearn.utility;
 
 private {
     import std.traits : Unqual;

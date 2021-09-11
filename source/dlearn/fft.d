@@ -9,13 +9,13 @@ License: MIT
 
 Authors: John Kilpatrick
 +/
-module numd.fft;
+module dlearn.fft;
 
 import mir.ndslice;
 
 private {
     import mir.math.common : fastmath;
-    import numd.utility;
+    import dlearn.utility;
 }
 
 /**
@@ -38,21 +38,41 @@ private {
         x =             array to fourier transform
         normalization = method to normalize it    
 
-    License: MIT
     Returns: 1D FFT of the input.
 */
-Slice!(T*, N) fft(T, N)(Slice!(T*, N) x, string normalization = "ortho") if (N >= 1) {
-    static if ((normalization == "ortho") || (normalization == "orthonormal"))
-        x[] /= sqrt(x.length); // TODO: Generalize to higher dim numbers
-    else static if ((normalization == "back") || (normalization == "backward"))
-        x[] /= x.length; // TODO: Generalize to higher dim numbers
-    else static if ((normalization == "forward") || (normalization == "fwd"))
-        x[] *= 1;
-    else
-        static assert(0, `allowed normalizations are "ortho", "backward", and "forward"`);
+Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = "ortho")
+        if (N >= 1 && isFloatingPoint!T) {
+    import dlearn.allocation : emptyLike;
 
-    return x;
+    auto y = emptyLike(x);
+
+    // TODO: Add implementation code
+
+    switch (normalization) {
+    case "ortho", "orthonormal":
+        import std.math : sqrt;
+        import std.conv : signed;
+
+        // y[] /= sqrt(x.length.signed); // TODO: Generalize to higher dim numbers
+        break;
+    case "back", "backward":
+        y[] /= x.length; // TODO: Generalize to higher dim numbers
+        break;
+    case "forward", "fwd":
+        break;
+    default:
+        import std.format;
+
+        throw new Exception(format("Unknown normalization: %s", normalization));
+    }
+
+    return y;
 }
+
+/// TODO
+// Slice!(T*, N) fft(T, N)(Slice!(T*, N) x, string normalization = "ortho") if (N >= 1 && isComplex!T) {
+// return 
+// }
 
 /**
     Toroidal roll Slice elements along a given axis.
@@ -63,10 +83,8 @@ Slice!(T*, N) fft(T, N)(Slice!(T*, N) x, string normalization = "ortho") if (N >
     roll(vec, 1); // [3, 1, 2]
     -------------------
     Params:
-    x = array to roll
-    shift = zero-indexed amount to shift to the left.
-
-    License: MIT - Copyright (c) 2021 John Kilpatrick
+        x = array to roll
+        shift = zero-indexed amount to shift to the left.
 
     Throws: throws nothing.
     Returns: cyclically permuted input.
@@ -107,13 +125,13 @@ pure @safe unittest {
 /++
     Shifts zero-frequency component to the center of the spectrum.
 
-	License: MIT - Copyright (c) 2021 John Kilpatrick
 	Returns: A slice with all zero elements
+    
     See_Also:
         iffshift, fft
 	Throws: throws nothing.
 +/
-static @fastmath auto fftshift(T, size_t N)(Slice!(T*, N) x) pure @safe if (N >= 1)  {
+static @fastmath auto fftshift(T, size_t N)(Slice!(T*, N) x) pure @safe if (N >= 1) {
     import std.math.rounding : floor;
     import std.conv : to;
 

@@ -9,16 +9,17 @@ License: MIT
 
 Authors: John Kilpatrick
 +/
-module numd.math;
+module dlearn.math;
 
 private {
     import mir.ndslice;
     import mir.ndslice.topology : map;
+    import mir.complex : Complex;
 
     import mir.math.common : approxEqual, fastmath;
 
-    import numd.allocation;
-    import numd.utility;
+    import dlearn.allocation;
+    import dlearn.utility;
 }
 
 // Unary functions
@@ -40,7 +41,7 @@ static foreach (func; [
 
 //
 pure @safe unittest {
-	import mir.ndslice.topology : as, iota;
+    import mir.ndslice.topology : as, iota;
     import mir.ndslice : slice;
 
     const x = 10.iota.as!double.slice;
@@ -98,7 +99,6 @@ pure @safe unittest {
 // Rounding
 static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. round towards zero
     mixin("static @fastmath Slice!(T*, N) " ~ func
-            ~ "(T, size_t N)(in Slice!(T*, N) x) /* pure nothrow */ @safe if (isFloatingPoint!T) {
         import mir.math.common : " ~ func ~ ";
 
         return x[].map!" ~ func ~ ".slice;
@@ -111,9 +111,6 @@ static foreach (func; ["ceil", "floor", "round", "trunc"]) { // TODO: fix, i.e. 
 
     const x = [1.1, 1.9, 2.0].fuse;
 
-    x.ceil;
-    x.floor;
-    x.round;
     x.trunc;
 }
 
@@ -134,13 +131,9 @@ static foreach (func; ["abs", "arg", "proj", "sqAbs"]) { // N.B. sqAbs is implem
 // pure @safe unittest {
 //     import mir.ndslice : fuse;
 
-//     const x = [1.1, 1.9, 2.0].fuse;
 
 //     x.abs;
 //     x.arg;
-//     x.floor;
-//     x.round;
-//     x.trunc;
 // }
 
 pure @safe unittest {
@@ -175,11 +168,6 @@ static foreach (func; ["deg2rad", "rad2deg"]) {
     }");
 }
 
-// /++
-// +/
-// static @fastmath bool approxEqual(T, size_t N)(in Slice!(T*, N) lhs, in Slice!(U*, N) rhs) pure nothrow @safe {
-//     import mir.math : approxEqual(lhs, rhs, maxRelDiff, maxAbsDiff)
-//     return lhs[].map!();
 // }
 
 // pure @safe unittest {
@@ -298,7 +286,6 @@ Slice!(T*, N) clamp(T, size_t N)(Slice!(T*, N) x, T min = -T.max, T max = T.max)
         if (isFloatingPoint!T) {
     import mir.ndslice.topology : map;
 
-    return x.dup.map!((ref a) => clamp(a, min, max)).slice;
 }
 
 ///

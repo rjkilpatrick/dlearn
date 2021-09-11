@@ -13,5 +13,5 @@
 		"-mcpu=native"
 	],
 	"license": "MIT",
-	"name": "numd"
+	"name": "dlearn"
 }

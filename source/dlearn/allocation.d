@@ -9,7 +9,7 @@ License: MIT
 
 Authors: John Kilpatrick
 +/
-module numd.allocation;
+module dlearn.allocation;
 
 private {
 	import std.stdio;
@@ -19,7 +19,7 @@ private {
 
 	alias defaultType = float;
 
-	import numd.utility;
+	import dlearn.utility;
 }
 
 /++
@@ -31,9 +31,10 @@ private {
 	Slice!(double*, 2) matrix = ones!double(4, 2);
 	---
 +/
-Slice!(T*, N) eye(T = defaultType, ulong N)(ulong[N] lengths...) pure @safe
+Slice!(T*, N) eye(T = defaultType, ulong N)(const ulong[N] lengths...) pure @safe
 		if ((isNumeric!T && N >= 2) && lengths.length) {
-	auto matrix = slice(lengths, cast(T) 0);
+	import std.conv : to;
+	auto matrix = slice(lengths, 0.to!T);
 	matrix.diagonal[] = 1;
 	return matrix;
 }
