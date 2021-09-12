@@ -14,7 +14,7 @@ High-level Linear algebra and scientific computing package in D.
 - [State of the Project](#state-of-the-project)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Building from source](#building-from-source)
+  - [Using with dub](#using-with-dub)
 - [Usage](#usage)
 - [Building the Documentation](#building-the-documentation)
 - [Contributing](#contributing)
