@@ -1,7 +1,6 @@
 # Dlearn
 
-<!-- GitHub can only display SVGs in img tags, not markdown -->
-<img src="./logo.svg"/>
+![Dlearn logo](logo.png)
 
 [![GitHub latest release](https://img.shields.io/github/release/rjkilpatrick/dlearn.svg?maxAge=86400&style=flat-square)](https://github.com/rjkilpatrick/dlearn/releases)
 [![Github Issues](https://img.shields.io/github/issues/rjkilpatrick/dlearn?style=flat-square)](https://github.com/rjkilpatrick/dlearn/issues)
@@ -14,8 +13,8 @@ High-level Linear algebra and scientific computing package in D.
 
 - [State of the Project](#state-of-the-project)
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Building from source](#building-from-source)
+  - [Prerequisites](#prerequisites)
+  - [Building from source](#building-from-source)
 - [Usage](#usage)
 - [Building the Documentation](#building-the-documentation)
 - [Contributing](#contributing)
@@ -33,11 +32,21 @@ If you are using it in your own projects, please pin to an [exact version](https
 1. [dub](https://dub.pm/)
 1. [dmd / ldc](https://dlang.org/download.html)
 
-### Building from source
+### Using with dub
 
-1. Download Dlearn from <https://github.com/rjkilpatrick/dlearn>
-1. Copy the folder `dlearn` in the `source` directory into your project folder
-1. `dub add-local dlearn`
+To use this package, run the following command in the root directory of your project
+
+```sh
+dub add dlearn
+```
+
+Or manually add the following to your dub.json
+
+```json
+"dlearn": "~>0.0.2"
+```
+
+See [dub](https://code.dlang.org/packages/dlearn) for details.
 
 ## Usage
 
@@ -77,4 +86,4 @@ If you think of a feature you'd like added, or how we can improve the project, s
 
 ## License
 
-dlearn is distributed under the MIT license, as found in  [LICENSE](LICENSE).
+dlearn is distributed under the MIT license, as found in [LICENSE](LICENSE).
