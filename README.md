@@ -16,6 +16,7 @@ High-level Linear algebra and scientific computing package in D.
   - [Prerequisites](#prerequisites)
   - [Using with dub](#using-with-dub)
 - [Usage](#usage)
+- [Testing](#testing)
 - [Building the Documentation](#building-the-documentation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -62,6 +63,14 @@ y.sinh.writeln;
 ```
 
 For more examples, please refer to the [Documentation](https://rjkilpatrick.github.io/dlearn/).
+
+## Testing
+
+To build the package and run all unit tests (in parallel if possible):
+
+```sh
+dub test --parallel
+```
 
 ## Building the Documentation
 
