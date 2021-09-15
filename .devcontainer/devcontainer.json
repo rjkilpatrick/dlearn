@@ -1,0 +1,9 @@
+{
+    "name": "D codespace",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"extensions": [
+		"webfreak.code-d"
+	]
+}
