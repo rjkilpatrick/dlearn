@@ -49,6 +49,20 @@ Or manually add the following to your dub.json
 
 See [dub](https://code.dlang.org/packages/dlearn) for details.
 
+### Single File
+
+```d
+#!/usr/bin/env dub
+/+ dub.sdl:
+	name "name_of_your_application"
+	dependency "matplotlib-d" version="~>0.1.4"
++/
+void main() {
+  import dlearn.allocation : ones;
+  auto x = ones!double(2, 2);
+}
+```
+
 ## Usage
 
 ```d
