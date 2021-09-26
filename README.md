@@ -5,6 +5,7 @@
 [![GitHub latest release](https://img.shields.io/github/release/rjkilpatrick/dlearn.svg?maxAge=86400&style=flat-square)](https://github.com/rjkilpatrick/dlearn/releases)
 [![Github Issues](https://img.shields.io/github/issues/rjkilpatrick/dlearn?style=flat-square)](https://github.com/rjkilpatrick/dlearn/issues)
 [![Github build status](https://img.shields.io/github/workflow/status/rjkilpatrick/dlearn/Run%20all%20dub%20unit%20tests?style=flat-square)](https://github.com/rjkilpatrick/dlearn/actions/workflows/unit-test.yml)
+[![Code coverage](https://img.shields.io/codecov/c/github/rjkilpatrick/dlearn?style=flat-square)](https://app.codecov.io/gh/rjkilpatrick/dlearn)
 [![License](https://img.shields.io/github/license/rjkilpatrick/dlearn?style=flat-square)](https://github.com/rjkilpatrick/dlearn/blob/main/LICENSE)
 
 High-level Linear algebra and scientific computing package in D.
@@ -48,6 +49,20 @@ Or manually add the following to your dub.json
 ```
 
 See [dub](https://code.dlang.org/packages/dlearn) for details.
+
+### Single File
+
+```d
+#!/usr/bin/env dub
+/+ dub.sdl:
+	name "name_of_your_application"
+	dependency "matplotlib-d" version="~>0.1.4"
++/
+void main() {
+  import dlearn.allocation : ones;
+  auto x = ones!double(2, 2);
+}
+```
 
 ## Usage
 
