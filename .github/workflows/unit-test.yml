@@ -52,7 +52,7 @@ jobs:
           compiler: ${{ matrix.dcompiler }}
 
       - name: Run tests and build coverage
-        run: dub test -q --build=unittest-cov
+        run: dub test -q --build=unittest-cov --parallel
         
       - name: Code Coverage
         uses: codecov/codecov-action@v2

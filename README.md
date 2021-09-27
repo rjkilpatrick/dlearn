@@ -91,7 +91,7 @@ For more examples, please refer to the [Documentation](https://rjkilpatrick.gith
 To build the package and run all unit tests (in parallel if possible):
 
 ```sh
-dub test --parallel
+dub test -q --parallel
 ```
 
 ## Building the Documentation
