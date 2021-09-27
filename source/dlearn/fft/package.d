@@ -69,6 +69,51 @@ Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = 
     return y;
 }
 
+/**
+    Calculates the one-dimensional inverse fourier transform of a Slice.
+
+    correct order is `fftshift(fft(ifftshift(x)))`
+
+
+    Example:
+    ---
+    double sq = sqrt(4);
+    ---
+    Params:
+        x =             array to fourier transform
+        normalization = method to normalize it    
+
+    Returns: 1D IFFT of the input.
+*/
+Slice!(T*, N) ifft(T, size_t N)(const Slice!(T*, N) x, in string normalization = "ortho")
+        if (N >= 1 && isFloatingPoint!T) {
+    import dlearn.allocation : emptyLike;
+
+    auto y = emptyLike(x);
+
+    // TODO: Add implementation code
+
+    switch (normalization) {
+    case "ortho", "orthonormal":
+        import std.math : sqrt;
+        import std.conv : signed;
+
+        // y[] /= sqrt(x.length.signed); // TODO: Generalize to higher dim numbers
+        break;
+    case "back", "backward":
+        y[] /= x.length; // TODO: Generalize to higher dim numbers
+        break;
+    case "forward", "fwd":
+        break;
+    default:
+        import std.format;
+
+        throw new Exception(format("Unknown normalization: %s", normalization));
+    }
+
+    return y;
+}
+
 /// TODO
 // Slice!(T*, N) fft(T, N)(Slice!(T*, N) x, string normalization = "ortho") if (N >= 1 && isComplex!T) {
 // return 
@@ -78,12 +123,12 @@ Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = 
     Toroidal roll Slice elements along a given axis.
 
     Example:
-    -------------------
+    ---
     auto vec = 3.iota.slice; // [1, 2, 3]
     roll(vec, 1); // [3, 1, 2]
-    -------------------
+    ---
     Params:
-        x = array to roll
+        x =     array to roll
         shift = zero-indexed amount to shift to the left.
 
     Throws: throws nothing.
@@ -174,7 +219,7 @@ pure @safe unittest {
     assert(ifftshift(y) == [2, 3, 4, 0, 1].fuse);
 }
 
-/// Assert fftshift and ifftshift are inverses of each other
+// Assert fftshift and ifftshift are inverses of each other
 pure @safe unittest {
     auto x = 5.iota.as!double.slice; // [0, 1, 2, 3, 4]
     assert(ifftshift(fftshift(x)) == x);

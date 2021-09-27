@@ -28,7 +28,11 @@ private {
     Dot product of 2 slices
 +/
 T dot(T, SliceKind kindX, U, SliceKind kindY, size_t N)(Slice!(T*, N,
-		kindX) x, Slice!(U*, N, kindY) y) pure nothrow @safe @fastmath
+		kindX) x, Slice!(U*, N, kindY) y) pure nothrow @safe @fastmath // {
+// 	import mir.blas : dot;
+
+// 	return dotProd(x.flattened, y.flattened);
+// }
 in {
 	assert(x.strides == y.strides);
 }
@@ -55,7 +59,11 @@ pure @safe unittest {
 Slice!(CommonType!(T, U)*, 2u) matrixMultiply(T, SliceKind kindX, U, SliceKind kindY)(
 		Slice!(T*, 2u, kindX) a, Slice!(U*, 2u, kindY) b) pure nothrow @safe @fastmath
 in {
-	assert(a.length!1 == b.length!0);
+	assert(a.length!1 == b.length!0, "Number of columns of a must equal number of rows of b");
+}
+out(ret) {
+	assert(a.length!0 == ret.length!0, "Number of columns of a must equal number of rows returned");
+	assert(b.length!1 == ret.length!1, "Number of columns of a must equal number of rows returned");
 }
 do {
 	import std.traits : CommonType;
