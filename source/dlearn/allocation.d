@@ -34,6 +34,7 @@ private {
 Slice!(T*, N) eye(T = defaultType, ulong N)(const ulong[N] lengths...) pure @safe
 		if ((isNumeric!T && N >= 2) && lengths.length) {
 	import std.conv : to;
+
 	auto matrix = slice(lengths, 0.to!T);
 	matrix.diagonal[] = 1;
 	return matrix;
@@ -75,7 +76,7 @@ pure @safe unittest {
 	Throws: throws nothing.
 	Returns: slice filled with ones.
 */
-auto ones(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow 
+auto ones(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow
 		if (lengths.length) {
 	return slice!T(lengths, 1);
 }
@@ -196,9 +197,10 @@ auto fullLike(T = defaultType, ulong N)(const Slice!(T*, N) x, const T fillValue
 	Throws: throws nothing.
 	Returns: unfilled slice.
 */
-auto empty(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow 
+auto empty(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow
 		if (lengths.length) {
 	import mir.ndslice.allocation : uninitSlice;
+
 	return uninitSlice!T(lengths);
 }
 
@@ -226,9 +228,6 @@ auto emptyLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothr
 
 	assert(y == [1, 1].fuse);
 }
-
-
-public import mir.ndslice.topology : linspace;
 
 // Random
 
@@ -275,7 +274,7 @@ Slice!(T*, N) rand(T = defaultType, ulong N)(ulong[N] lengths...) @safe
 Slice!(T*, N) randn(T = defaultType, ulong N)(ulong[N] lengths...) @safe
 		if (isFloatingPoint!T) {
 	import mir.random.variable : normalVar;
-import mir.random.algorithm : randomSlice;
+	import mir.random.algorithm : randomSlice;
 
 	return normalVar!T(0, 1).randomSlice(lengths);
 }
@@ -301,3 +300,36 @@ pure @safe unittest {
 	assert(diag([0, 0].fuse) == [[0, 0], [0, 0]].fuse);
 	assert(diag([1.0, 1.0].fuse) == [[1.0, 0], [0, 1.0]].fuse);
 }
+
+/++
+	Creates a new vandermonde matrix
++/
+auto vandermondeMatrix(T = defaultType)(Slice!(T*, 1) x) @safe nothrow pure 
+		if (isContinuous!T) {
+	import mir.ndslice.filling : fillVandermonde;
+
+	auto v = empty!T(x.length, x.length);
+	v.fillVandermonde(x);
+	return v;
+}
+
+///
+unittest {
+	import mir.ndslice.topology : as;
+	import mir.ndslice.allocation : slice;
+
+	auto x = iota([5], 1).as!double.slice;
+	const v = vandermondeMatrix(x);
+	//dfmt off
+	assert(v ==
+			[[1.0, 1, 1, 1, 1],
+			[1.0, 2, 4, 8, 16],
+			[1.0, 3, 9, 27, 81],
+			[1.0, 4, 16, 64, 256],
+			[1.0, 5, 25, 125, 625]
+			]);
+	//dfmt on
+}
+
+public import mir.ndslice.topology : linspace;
+public import mir.ndslice.topology : iota;
