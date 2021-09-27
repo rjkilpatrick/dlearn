@@ -52,15 +52,22 @@ See [dub](https://code.dlang.org/packages/dlearn) for details.
 
 ### Single File
 
+To use dlearn as script, use `dub run --single example.d`, where the contents of `example.d` are as follows:
+
 ```d
 #!/usr/bin/env dub
-/+ dub.sdl:
-	name "name_of_your_application"
-	dependency "matplotlib-d" version="~>0.1.4"
+/+ dub.json:
+{
+    "dependencies": {"dlearn": "*"}
+}
 +/
-void main() {
-  import dlearn.allocation : ones;
-  auto x = ones!double(2, 2);
+
+void main()
+{
+    import std : writeln;
+    import dlearn;
+
+    dlearn.arrange(5).writeln;
 }
 ```
 
