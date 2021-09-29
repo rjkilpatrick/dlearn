@@ -31,8 +31,9 @@ If you are using it in your own projects, please pin to an [exact version](https
 
 ### Prerequisites
 
-1. [dub](https://dub.pm/)
-1. [dmd / ldc](https://dlang.org/download.html)
+1. [dmd / ldc](https://dlang.org/download.html), a D compiler
+1. [dub](https://dub.pm/), D's package manager
+1. [Link with CBLAS / LAPACK](https://github.com/libmir/mir-lapack/wiki/Link-with-CBLAS-&-LAPACK)
 
 ### Using with dub
 
