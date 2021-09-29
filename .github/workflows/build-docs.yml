@@ -23,16 +23,23 @@ jobs:
       - name: Install D Compiler
         uses: dlang-community/setup-dlang@v1
         with:
-          compiler: ${{ matrix.dcompiler }}
+          compiler: dmd-latest
 
-      - name: Run tests
-        run: dub build --build=ddox
+      - name: Builds documentation
+        run: dub build -b ddox
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           # Optional, but recommended
           # Defaults to "Apply automatic changes"
-          commit_message: Update documentation
+          commit_message: "docs: Update documentation"
+
+          # Optional glob pattern of files which should be added to the commit
+          # Defaults to all (.)
+          # See the `pathspec`-documentation for git
+          # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
+          # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
+          file_pattern: docs/**
 
           # Optional branch name where commit should be pushed to.
           # Defaults to the current branch.
