@@ -1,3 +1,7 @@
 FROM mcr.microsoft.com/vscode/devcontainers/base:alpine
 
-RUN apk add --no-cache dub dmd ldc gcc-gdc openblas-dev
+RUN apk add --no-cache \
+    # Dlang requirements
+    dub dmd ldc gcc-gdc \
+    # Blas requirements
+    openblas-dev
