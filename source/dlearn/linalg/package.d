@@ -21,7 +21,7 @@ private {
 
 	import dlearn.allocation;
 	import dlearn.math;
-	import dlearn.utility;
+	import dlearn.utils;
 }
 
 /++

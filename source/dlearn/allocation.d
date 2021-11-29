@@ -19,7 +19,7 @@ private {
 
 	alias defaultType = float;
 
-	import dlearn.utility;
+	import dlearn.utils;
 }
 
 /++

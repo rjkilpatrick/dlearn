@@ -15,7 +15,7 @@ import mir.ndslice;
 
 private {
     import mir.math.common : fastmath;
-    import dlearn.utility;
+    import dlearn.utils;
 }
 
 /**

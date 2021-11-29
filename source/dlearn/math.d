@@ -19,7 +19,7 @@ private {
     import mir.math.common : approxEqual, fastmath;
 
     import dlearn.allocation;
-    import dlearn.utility;
+    import dlearn.utils;
 }
 
 // Unary functions
