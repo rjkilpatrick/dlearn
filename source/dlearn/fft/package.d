@@ -18,6 +18,12 @@ private {
     import dlearn.utils;
 }
 
+enum Normalization {
+    forward,     // 1
+    orthonormal, // 1 / sqrt(N)
+    backward,    // 1 / N
+}
+
 /**
     Calculates the one-dimensional fourier transform of a Slice.
 
@@ -40,7 +46,7 @@ private {
 
     Returns: 1D FFT of the input.
 */
-Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = "ortho")
+Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, Normalization normalization = Normalization.forward)
         if (N >= 1 && isFloatingPoint!T) {
     import dlearn.allocation : emptyLike;
 
@@ -49,16 +55,16 @@ Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = 
     // TODO: Add implementation code
 
     switch (normalization) {
-    case "ortho", "orthonormal":
+    case Normalization.orthonormal:
         import std.math : sqrt;
         import std.conv : signed;
 
         // y[] /= sqrt(x.length.signed); // TODO: Generalize to higher dim numbers
         break;
-    case "back", "backward":
+    case Normalization.backward:
         y[] /= x.length; // TODO: Generalize to higher dim numbers
         break;
-    case "forward", "fwd":
+    case Normalization.forward:
         break;
     default:
         import std.format;
@@ -85,7 +91,7 @@ Slice!(T*, N) fft(T, size_t N)(const Slice!(T*, N) x, in string normalization = 
 
     Returns: 1D IFFT of the input.
 */
-Slice!(T*, N) ifft(T, size_t N)(const Slice!(T*, N) x, in string normalization = "ortho")
+Slice!(T*, N) ifft(T, size_t N)(const Slice!(T*, N) x, Normalization normalization = Normalization.backward)
         if (N >= 1 && isFloatingPoint!T) {
     import dlearn.allocation : emptyLike;
 
@@ -94,16 +100,16 @@ Slice!(T*, N) ifft(T, size_t N)(const Slice!(T*, N) x, in string normalization =
     // TODO: Add implementation code
 
     switch (normalization) {
-    case "ortho", "orthonormal":
+    case Normalization.orthonormal:
         import std.math : sqrt;
         import std.conv : signed;
 
         // y[] /= sqrt(x.length.signed); // TODO: Generalize to higher dim numbers
         break;
-    case "back", "backward":
+    case Normalization.backward:
         y[] /= x.length; // TODO: Generalize to higher dim numbers
         break;
-    case "forward", "fwd":
+    case Normalization.forward:
         break;
     default:
         import std.format;
