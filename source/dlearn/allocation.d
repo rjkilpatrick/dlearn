@@ -12,14 +12,14 @@ Authors: John Kilpatrick
 module dlearn.allocation;
 
 private {
-	import std.stdio;
-	import mir.ndslice;
-	import mir.complex;
-	import mir.ndslice.topology : map;
+    import std.stdio;
+    import mir.ndslice;
+    import mir.complex;
+    import mir.ndslice.topology : map;
 
-	alias defaultType = float;
+    alias defaultType = float;
 
-	import dlearn.utils;
+    import dlearn.utils;
 }
 
 /++
@@ -32,32 +32,32 @@ private {
 	---
 +/
 Slice!(T*, N) eye(T = defaultType, ulong N)(const ulong[N] lengths...) pure @safe
-		if ((isNumeric!T && N >= 2) && lengths.length) {
-	import std.conv : to;
+        if ((isNumeric!T && N >= 2) && lengths.length) {
+    import std.conv : to;
 
-	auto matrix = slice(lengths, 0.to!T);
-	matrix.diagonal[] = 1;
-	return matrix;
+    auto matrix = slice(lengths, 0.to!T);
+    matrix.diagonal[] = 1;
+    return matrix;
 }
 
 /// ditto
 Slice!(T*, 2u) eye(T = defaultType)(const ulong n) pure @safe if (isNumeric!T) {
-	return eye!T(n, n);
+    return eye!T(n, n);
 }
 
 /// ditto
 alias identity = eye;
 
 pure @safe unittest {
-	assert(eye!int(2) == [[1, 0], [0, 1]].fuse);
-	assert(eye!int(2, 3) == [[1, 0, 0], [0, 1, 0]].fuse);
-	assert(identity!int(2, 3) == [[1, 0, 0], [0, 1, 0]].fuse);
-	assert(identity!int([2, 3]) == [[1, 0, 0], [0, 1, 0]].fuse);
+    assert(eye!int(2) == [[1, 0], [0, 1]].fuse);
+    assert(eye!int(2, 3) == [[1, 0, 0], [0, 1, 0]].fuse);
+    assert(identity!int(2, 3) == [[1, 0, 0], [0, 1, 0]].fuse);
+    assert(identity!int([2, 3]) == [[1, 0, 0], [0, 1, 0]].fuse);
 
-	assert(eye!(Complex!double)(2) == [
-			[Complex!double(1.0, 0), Complex!double(0, 0)],
-			[Complex!double(0, 0), Complex!double(1, 0)]
-			].fuse);
+    assert(eye!(Complex!double)(2) == [
+            [Complex!double(1.0, 0), Complex!double(0, 0)],
+            [Complex!double(0, 0), Complex!double(1, 0)]
+            ].fuse);
 
 }
 
@@ -77,28 +77,28 @@ pure @safe unittest {
 	Returns: slice filled with ones.
 */
 auto ones(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow
-		if (lengths.length) {
-	return slice!T(lengths, 1);
+        if (lengths.length) {
+    return slice!T(lengths, 1);
 }
 
 ///
 @safe pure unittest {
-	assert(ones!int(2) == [1, 1].fuse);
-	assert(ones!int(2, 2) == [[1, 1], [1, 1]].fuse);
+    assert(ones!int(2) == [1, 1].fuse);
+    assert(ones!int(2, 2) == [[1, 1], [1, 1]].fuse);
 }
 
 /++
 	Ones like a given Slice
 +/
 auto onesLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return ones!(T, N)(x.shape);
+    return ones!(T, N)(x.shape);
 }
 
 ///
 @safe pure unittest {
-	assert(onesLike([0, 0].fuse) == [1, 1].fuse);
-	auto x = ones!int(2, 2);
-	assert(x == onesLike(x));
+    assert(onesLike([0, 0].fuse) == [1, 1].fuse);
+    auto x = ones!int(2, 2);
+    assert(x == onesLike(x));
 }
 
 /**
@@ -116,32 +116,32 @@ auto onesLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothro
 	Returns: A slice with all zero elements
 */
 auto zeros(T = defaultType, ulong N)(ulong[N] lengths...) pure @safe
-		if (lengths.length && isNumeric!T) {
-	return slice!T(lengths, 0);
+        if (lengths.length && isNumeric!T) {
+    return slice!T(lengths, 0);
 }
 
 ///
 pure @safe unittest {
-	assert(zeros!int(2) == [0, 0].fuse);
-	assert(zeros!int(2, 2) == [[0, 0], [0, 0]].fuse);
-	assert(zeros!int([2, 2]) == [[0, 0], [0, 0]].fuse);
+    assert(zeros!int(2) == [0, 0].fuse);
+    assert(zeros!int(2, 2) == [[0, 0], [0, 0]].fuse);
+    assert(zeros!int([2, 2]) == [[0, 0], [0, 0]].fuse);
 }
 
 /++
 	Zeros like a given slice
 +/
 auto zerosLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return zeros!(T, N)(x.shape);
+    return zeros!(T, N)(x.shape);
 }
 
 ///
 pure @safe unittest {
-	import mir.ndslice.topology : as;
+    import mir.ndslice.topology : as;
 
-	assert(zerosLike([0, 0].fuse) == [0, 0].fuse);
+    assert(zerosLike([0, 0].fuse) == [0, 0].fuse);
 
-	auto x = [[1, 2], [3, 4]].fuse.as!double.slice;
-	assert(zerosLike(x) == [[0., 0.], [0., 0.]].fuse);
+    auto x = [[1, 2], [3, 4]].fuse.as!double.slice;
+    assert(zerosLike(x) == [[0., 0.], [0., 0.]].fuse);
 }
 
 /**
@@ -162,8 +162,8 @@ pure @safe unittest {
 	Returns: A slice with all zero elements
 */
 auto full(T = defaultType, ulong N)(ulong[N] lengths, T fillValue) pure @safe
-		if (isNumeric!T) {
-	return slice!T(lengths, fillValue);
+        if (isNumeric!T) {
+    return slice!T(lengths, fillValue);
 }
 
 //TODO: Rip Off integer loading from https://github.com/libmir/mir-algorithm/blob/9af158d339a1bd966a6abfea700667a574e54010/source/mir/ndslice/allocation.d#L274-L317
@@ -171,16 +171,16 @@ auto full(T = defaultType, ulong N)(ulong[N] lengths, T fillValue) pure @safe
 
 ///
 pure @safe unittest {
-	assert(full([2], 1) == [1, 1].fuse);
-	assert(full([2, 2], 1) == [[1, 1], [1, 1]].fuse);
-	assert(full([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
-	assert(full!double([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
-	assert(full!float([2, 2], 1.1) == [[1.1f, 1.1f], [1.1f, 1.1f]].fuse);
+    assert(full([2], 1) == [1, 1].fuse);
+    assert(full([2, 2], 1) == [[1, 1], [1, 1]].fuse);
+    assert(full([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
+    assert(full!double([2, 2], 1.1) == [[1.1, 1.1], [1.1, 1.1]].fuse);
+    assert(full!float([2, 2], 1.1) == [[1.1f, 1.1f], [1.1f, 1.1f]].fuse);
 }
 
 /// ditto
 auto fullLike(T = defaultType, ulong N)(const Slice!(T*, N) x, const T fillValue) @safe pure nothrow {
-	return full!(T, N)(x.shape, fillValue);
+    return full!(T, N)(x.shape, fillValue);
 }
 
 /**
@@ -198,35 +198,35 @@ auto fullLike(T = defaultType, ulong N)(const Slice!(T*, N) x, const T fillValue
 	Returns: unfilled slice.
 */
 auto empty(T = defaultType, ulong N)(const ulong[N] lengths...) @safe pure nothrow
-		if (lengths.length) {
-	import mir.ndslice.allocation : uninitSlice;
+        if (lengths.length) {
+    import mir.ndslice.allocation : uninitSlice;
 
-	return uninitSlice!T(lengths);
+    return uninitSlice!T(lengths);
 }
 
 ///
 @safe pure unittest {
-	auto x = empty!int(2);
-	x[] = 1;
+    auto x = empty!int(2);
+    x[] = 1;
 
-	assert(x == [1, 1].fuse);
+    assert(x == [1, 1].fuse);
 }
 
 /++
 	New empty like Slice
 +/
 auto emptyLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothrow {
-	return empty!(T, N)(x.shape);
+    return empty!(T, N)(x.shape);
 }
 
 ///
 @safe pure unittest {
-	Slice!(double*, 1) x = [0., 0.].fuse;
+    Slice!(double*, 1) x = [0., 0.].fuse;
 
-	auto y = emptyLike(x);
-	y[] = 1;
+    auto y = emptyLike(x);
+    y[] = 1;
 
-	assert(y == [1, 1].fuse);
+    assert(y == [1, 1].fuse);
 }
 
 // Random
@@ -247,11 +247,11 @@ auto emptyLike(T = defaultType, ulong N)(const Slice!(T*, N) x) @safe pure nothr
     ---
 +/
 Slice!(T*, N) rand(T = defaultType, ulong N)(ulong[N] lengths...) @safe
-		if (isFloatingPoint!T) {
-	import mir.random.variable : uniformVar;
-	import mir.random.algorithm : randomSlice;
+        if (isFloatingPoint!T) {
+    import mir.random.variable : uniformVar;
+    import mir.random.algorithm : randomSlice;
 
-	return uniformVar!T(0, 1).randomSlice(lengths);
+    return uniformVar!T(0, 1).randomSlice(lengths);
 }
 
 /++
@@ -272,55 +272,55 @@ Slice!(T*, N) rand(T = defaultType, ulong N)(ulong[N] lengths...) @safe
     ---
 +/
 Slice!(T*, N) randn(T = defaultType, ulong N)(ulong[N] lengths...) @safe
-		if (isFloatingPoint!T) {
-	import mir.random.variable : normalVar;
-	import mir.random.algorithm : randomSlice;
+        if (isFloatingPoint!T) {
+    import mir.random.variable : normalVar;
+    import mir.random.algorithm : randomSlice;
 
-	return normalVar!T(0, 1).randomSlice(lengths);
+    return normalVar!T(0, 1).randomSlice(lengths);
 }
 
 /++
 	Places vector on diagonal of a new matrix
 +/
 Slice!(T*, 2) diag(T = defaultType)(Slice!(T*, 1) x) @safe pure nothrow {
-	auto y = zeros!(T, 2)(x.length, x.length);
-	y.diagonal[] = x;
-	return y;
+    auto y = zeros!(T, 2)(x.length, x.length);
+    y.diagonal[] = x;
+    return y;
 }
 
 ///
 pure @safe unittest {
-	import mir.complex : Complex;
+    import mir.complex : Complex;
 
-	assert(diag([1., 1.].fuse) == eye(2, 2));
-	// assert(diag([Complex!double(2., 0), Complex!double(0., 1.)].fuse) == [
-	// [Complex!double(2., 0.), Complex!double(0., 0.)],
-	// [Complex!double(0., 0.), Complex!double(0., 1.)]
-	// ].fuse);
-	assert(diag([0, 0].fuse) == [[0, 0], [0, 0]].fuse);
-	assert(diag([1.0, 1.0].fuse) == [[1.0, 0], [0, 1.0]].fuse);
+    assert(diag([1., 1.].fuse) == eye(2, 2));
+    // assert(diag([Complex!double(2., 0), Complex!double(0., 1.)].fuse) == [
+    // [Complex!double(2., 0.), Complex!double(0., 0.)],
+    // [Complex!double(0., 0.), Complex!double(0., 1.)]
+    // ].fuse);
+    assert(diag([0, 0].fuse) == [[0, 0], [0, 0]].fuse);
+    assert(diag([1.0, 1.0].fuse) == [[1.0, 0], [0, 1.0]].fuse);
 }
 
 /++
 	Creates a new vandermonde matrix
 +/
 auto vandermondeMatrix(T = defaultType)(Slice!(T*, 1) x) @safe nothrow pure 
-		if (isContinuous!T) {
-	import mir.ndslice.filling : fillVandermonde;
+        if (isContinuous!T) {
+    import mir.ndslice.filling : fillVandermonde;
 
-	auto v = empty!T(x.length, x.length);
-	v.fillVandermonde(x);
-	return v;
+    auto v = empty!T(x.length, x.length);
+    v.fillVandermonde(x);
+    return v;
 }
 
 ///
 unittest {
-	import mir.ndslice.topology : as;
-	import mir.ndslice.allocation : slice;
+    import mir.ndslice.topology : as;
+    import mir.ndslice.allocation : slice;
 
-	auto x = iota([5], 1).as!double.slice;
-	const v = vandermondeMatrix(x);
-	//dfmt off
+    auto x = iota([5], 1).as!double.slice;
+    const v = vandermondeMatrix(x);
+    //dfmt off
 	assert(v ==
 			[[1.0, 1, 1, 1, 1],
 			[1.0, 2, 4, 8, 16],
