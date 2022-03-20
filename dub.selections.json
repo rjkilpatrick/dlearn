@@ -1,11 +1,11 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"cblas": "2.3.0",
-		"mir-algorithm": "3.10.83",
+		"cblas": "2.3.1",
+		"mir-algorithm": "3.10.107",
 		"mir-blas": "1.1.13",
-		"mir-core": "1.1.82",
-		"mir-linux-kernel": "1.2.0",
+		"mir-core": "1.1.103",
+		"mir-linux-kernel": "1.2.1",
 		"mir-random": "2.2.19"
 	}
 }
